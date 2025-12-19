@@ -1,0 +1,294 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RANK MODE – 🔥 DAILY DISCIPLINE SYSTEM 🔥</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#020617">
+
+<style>
+:root{
+  --dark:#020617;
+  --glass:rgba(2,6,23,.88);
+  --danger:#ef4444;
+  --warn:#f59e0b;
+  --success:#22c55e;
+  --muted:#94a3b8;
+  --text:#e5e7eb;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Segoe UI,Inter,sans-serif;
+  color:var(--text);
+  background:var(--dark);
+}
+.section{padding:32px 20px;background-size:cover;background-position:center}
+.overlay{background:var(--glass);max-width:1000px;margin:auto;padding:25px}
+
+.top{
+  background-image:
+  linear-gradient(rgba(2,6,23,.6),rgba(2,6,23,.8)),
+  url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1600");
+}
+.tasks-section{
+  background-image:
+  linear-gradient(rgba(2,6,23,.7),rgba(2,6,23,.9)),
+  url("https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1600");
+}
+.completed-section{
+  background-image:
+  linear-gradient(rgba(2,6,23,.7),rgba(2,6,23,.9)),
+  url("https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1600");
+}
+.analytics{
+  background-image:
+  linear-gradient(rgba(2,6,23,.7),rgba(2,6,23,.9)),
+  url("https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1600");
+}
+
+h1{margin:0;color:var(--warn);letter-spacing:3px}
+h3{letter-spacing:2px;color:#cbd5f5}
+.quote{margin-top:8px;font-style:italic;color:#cbd5f5}
+.time{margin-top:6px;color:var(--muted)}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:10px;margin-top:20px
+}
+.stat{
+  background:rgba(2,6,23,.85);
+  border:1px solid #1e293b;
+  padding:14px
+}
+.stat label{font-size:11px;color:var(--muted)}
+.stat span{font-size:22px;font-weight:800}
+
+.task{
+  display:flex;
+  justify-content:space-between;
+  padding:14px;margin-top:10px;
+  background:rgba(2,6,23,.85);
+  border:1px solid #1e293b
+}
+.task.pending{border-left:4px solid var(--danger)}
+.task.done{border-left:4px solid var(--success);opacity:.85}
+.task small{color:var(--muted)}
+
+button{border:none;padding:6px 10px;font-size:12px;cursor:pointer}
+.done-btn{background:var(--success)}
+.lock-btn{background:#334155;color:#94a3b8}
+.del-btn{background:var(--danger)}
+
+.add-box{margin-top:15px;display:flex;gap:8px}
+.add-box input{
+  flex:1;padding:10px;background:#020617;
+  border:1px solid #1e293b;color:var(--text)
+}
+.add-box button{background:var(--warn);font-weight:700}
+
+canvas{margin-top:15px;background:rgba(2,6,23,.85);border:1px solid #1e293b}
+footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
+</style>
+</head>
+
+<body>
+
+<div class="section top">
+<div class="overlay">
+<h1>RANK MODE – 🔥 DAILY DISCIPLINE SYSTEM 🔥</h1>
+<div class="quote" id="quote"></div>
+<div class="time" id="time"></div>
+
+<div class="stats">
+  <div class="stat"><label>DISCIPLINE</label><span id="percent">0%</span></div>
+  <div class="stat"><label>STREAK</label><span id="streak">0 🔥</span></div>
+  <div class="stat"><label>EXAM</label><span>CGL 2026</span></div>
+  <div class="stat"><label>DAYS LEFT</label><span style="color:#ef4444">180</span></div>
+  <div class="stat"><label>INTENSITY</label><span>MEDIUM</span></div>
+</div>
+</div>
+</div>
+
+<div class="section tasks-section">
+<div class="overlay">
+<h3>PENDING TASKS</h3>
+<div id="pending"></div>
+
+<div class="add-box">
+<input id="taskName" placeholder="Extra task">
+<input id="taskTime" placeholder="6:00 am - 7:00 am">
+<button onclick="addTask()">ADD</button>
+</div>
+</div>
+</div>
+
+<div class="section completed-section">
+<div class="overlay">
+<h3>COMPLETED TASKS</h3>
+<div id="completed"></div>
+</div>
+</div>
+
+<div class="section analytics">
+<div class="overlay">
+<h3>WEEKLY DISCIPLINE</h3>
+<canvas id="week" height="200"></canvas>
+
+<h3>MONTHLY REPORT</h3>
+<div id="report"></div>
+<button onclick="window.print()">DOWNLOAD PDF</button>
+</div>
+</div>
+
+<footer>© Mahesh Surada</footer>
+
+<script>
+/* SERVICE WORKER */
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("service-worker.js");
+}
+
+/* NOTIFICATION PERMISSION */
+if("Notification" in window && Notification.permission!=="granted"){
+  Notification.requestPermission();
+}
+
+/* DATA */
+const quotes=[
+"Someone else is studying right now.",
+"Rank is built in silence.",
+"Comfort kills ambition.",
+"Discipline beats motivation."
+];
+
+const DEFAULT_TASKS=[
+["Wakeup","6:00 am - 7:00 am"],
+["Daily current affairs","7:30 am - 8:00 am"],
+["Daily vocab","8:00 am - 8:15 am"],
+["The Hindu articles","8:15 am - 8:30 am"],
+["Previous day doubts (YT)","10:00 am - 10:20 am"],
+["Mock test (G.A)","10:20 am - 11:00 am"],
+["Important notes","11:00 am - 11:15 am"],
+["Afternoon full mock","1:30 pm - 2:30 pm"],
+["Afternoon mock revision","2:30 pm - 3:00 pm"],
+["Evening current affairs","3:20 pm - 3:40 pm"],
+["Walking with Instagram","4:45 pm - 6:15 pm"],
+["Mock test (G.S)","6:15 pm - 6:30 pm"],
+["Full mock night","9:00 pm - 10:00 pm"],
+["Revision night mock","10:00 pm - 10:30 pm"],
+["Knowledge pill reels","10:30 pm - 11:00 pm"],
+["Entertainment","11:00 pm - 11:30 pm"]
+];
+
+let state=JSON.parse(localStorage.getItem("discipline"))||{
+tasks:DEFAULT_TASKS.map(t=>({name:t[0],time:t[1],done:false,isDefault:true})),
+history:[],
+streak:0,
+lastReset:new Date().toDateString(),
+alerts:{}
+};
+
+function save(){localStorage.setItem("discipline",JSON.stringify(state))}
+
+function parseTime(str){
+  let [hm,ap]=str.trim().split(" ");
+  let [h,m]=hm.split(":").map(Number);
+  if(ap==="pm"&&h!==12)h+=12;
+  if(ap==="am"&&h===12)h=0;
+  let d=new Date();d.setHours(h,m,0,0);return d;
+}
+
+function playAlert(task){
+  new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg").play().catch(()=>{});
+  if(navigator.vibrate) navigator.vibrate([200,100,200]);
+  if("Notification" in window && Notification.permission==="granted"){
+    new Notification("⏰ Task Started",{body:task});
+  }
+}
+
+function checkTaskAlerts(){
+  let today=new Date().toDateString();
+  state.tasks.forEach(t=>{
+    let start=parseTime(t.time.split("-")[0]);
+    if(new Date()>=start && state.alerts[t.name]!==today){
+      playAlert(t.name);
+      state.alerts[t.name]=today;
+      save();
+    }
+  });
+}
+
+function dailyReset(){
+  let today=new Date().toDateString();
+  if(state.lastReset!==today){
+    let pct=Math.round(state.tasks.filter(t=>t.done).length/state.tasks.length*100);
+    state.history.push(pct);
+    state.streak=pct===100?state.streak+1:0;
+    state.tasks.forEach(t=>t.done=false);
+    state.alerts={};
+    state.lastReset=today;
+    save();
+  }
+}
+
+function render(){
+  pending.innerHTML="";completed.innerHTML="";
+  let done=0;
+  state.tasks.forEach((t,i)=>{
+    let unlocked=new Date()>=parseTime(t.time.split("-")[1]);
+    let el=document.createElement("div");
+    el.className="task "+(t.done?"done":"pending");
+    el.innerHTML=`
+    <div><b>${t.name}</b><br><small>${t.time}</small></div>
+    <div>
+      ${!t.done?(unlocked?`<button class="done-btn" onclick="mark(${i})">DONE</button>`:`<button class="lock-btn">LOCKED</button>`):""}
+      ${t.isDefault?"":`<button class="del-btn" onclick="delTask(${i})">X</button>`}
+    </div>`;
+    (t.done?completed:pending).appendChild(el);
+    if(t.done)done++;
+  });
+  percent.innerText=Math.round(done/state.tasks.length*100)+"%";
+  streak.innerText=state.streak+" 🔥";
+}
+
+function mark(i){state.tasks[i].done=true;save();render()}
+function delTask(i){if(state.tasks[i].isDefault)return;state.tasks.splice(i,1);save();render()}
+function addTask(){
+  if(!taskName.value||!taskTime.value)return;
+  state.tasks.push({name:taskName.value,time:taskTime.value,done:false,isDefault:false});
+  taskName.value="";taskTime.value="";
+  save();render();
+}
+
+function drawWeek(){
+  let ctx=week.getContext("2d");
+  ctx.clearRect(0,0,week.width,week.height);
+  ctx.strokeStyle="#22c55e";ctx.beginPath();
+  state.history.slice(-7).forEach((v,i)=>{
+    let x=i*(week.width/6);
+    let y=week.height-(v/100*week.height);
+    i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+  });
+  ctx.stroke();
+}
+
+function monthly(){
+  let avg=Math.round(state.history.reduce((a,b)=>a+b,0)/state.history.length||0);
+  report.innerHTML=`Average Discipline: <b>${avg}%</b>`;
+}
+
+setInterval(()=>time.innerText=new Date().toLocaleString(),1000);
+setInterval(checkTaskAlerts,30000);
+setInterval(dailyReset,60000);
+
+quote.innerText=quotes[new Date().getDate()%quotes.length];
+render();drawWeek();monthly();save();
+</script>
+
+</body>
+</html>
