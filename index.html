@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSS Trip Sheet — Route No. 3</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0e3a4a">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="R3 Trip Sheet">
+<style>
+  :root{
+    --navy:#0b2e4a; --navy-deep:#071f33; --teal:#0f7a72; --teal-light:#e4f3f1;
+    --sand:#f6f4ee; --ink:#16232e; --line:#d8dcd6; --amber:#c07d1f; --white:#fff;
+    --red:#b23b3b;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var(--sand); color:var(--ink); padding-bottom:60px;}
+  header{background:linear-gradient(135deg,var(--navy-deep),var(--navy)); color:#fff; padding:20px 16px 22px;}
+  header h1{margin:0 0 4px; font-size:1.25rem;}
+  header p{margin:0; font-size:.8rem; color:#bcd3e0;}
+  .wrap{max-width:920px; margin:0 auto; padding:0 8px;}
+  .tabs{display:flex; gap:6px; margin-top:14px; overflow-x:auto;}
+  .tab-btn{flex:1; min-width:110px; padding:10px 8px; border:1px solid var(--line); background:#fff; border-radius:8px 8px 0 0; font-size:.78rem; font-weight:700; color:#5a6b76; cursor:pointer;}
+  .tab-btn.active{background:var(--navy); color:#fff; border-color:var(--navy);}
+  .tabpage{display:none;}
+  .tabpage.active{display:block;}
+  .card{background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px; margin-top:12px; box-shadow:0 1px 3px rgba(0,0,0,.04);}
+  .card h2{margin:0 0 12px; font-size:.76rem; text-transform:uppercase; letter-spacing:1px; color:var(--teal); border-bottom:1px solid var(--line); padding-bottom:8px;}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;}
+  label{display:block; font-size:.7rem; color:#5a6b76; margin-bottom:3px; font-weight:600;}
+  select, input[type=date], input[type=month], input[type=number], input[type=text]{
+    width:100%; padding:8px; border:1px solid var(--line); border-radius:6px; font-size:.85rem; background:#fbfbf9; color:var(--ink);
+  }
+  select:focus, input:focus{outline:2px solid var(--teal); outline-offset:1px;}
+  .field{margin-bottom:10px;}
+  .shift-badge{display:inline-block; padding:3px 9px; border-radius:20px; font-size:.68rem; background:var(--teal-light); color:var(--teal); font-weight:700; margin-top:4px;}
+  button{cursor:pointer; border:none; border-radius:7px; font-weight:700; font-size:.82rem; padding:9px 14px;}
+  .btn-primary{background:var(--teal); color:#fff; width:100%; margin-top:8px;}
+  .btn-ghost{background:none; color:var(--navy); border:1px solid var(--line); font-size:.7rem; padding:5px 9px;}
+  .btn-danger{background:none; color:var(--red); border:1px solid #e6c6c6; font-size:.66rem; padding:3px 7px; border-radius:6px;}
+  table{width:100%; min-width:600px; border-collapse:collapse; font-size:.7rem;}
+  th{text-align:center; padding:6px 3px; background:var(--navy); color:#fff; font-size:.6rem; text-transform:uppercase; white-space:nowrap;}
+  td{padding:5px 3px; border-bottom:1px solid var(--line); text-align:center;}
+  td input{padding:5px 2px; font-size:.72rem; text-align:center;}
+  td input[type=text]{text-align:left;}
+  td select{padding:5px 1px; font-size:.66rem;}
+  .time-cell{font-weight:800; color:var(--navy); white-space:nowrap; font-size:.78rem;}
+  .time-cell .loc-tag{display:block; font-weight:600; font-size:.58rem; color:var(--teal); text-transform:uppercase; letter-spacing:.3px; margin-top:1px;}
+  .table-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; border:1px solid var(--line); border-radius:8px;}
+  .scroll-hint{font-size:.65rem; color:#8a9aa4; text-align:right; margin-top:4px;}
+  tr.total-row td{font-weight:800; background:var(--teal-light); color:var(--navy);}
+  tr.grand-row td{font-weight:800; background:var(--navy); color:#fff;}
+  .denom-block{border:1px solid var(--line); border-radius:8px; padding:10px; margin-bottom:10px; background:#fbfbf9;}
+  .denom-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;}
+  .denom-head b{color:var(--navy); font-size:.85rem;}
+  .denom-sub{font-size:.75rem; margin-top:6px; color:var(--teal); font-weight:700; text-align:right;}
+  .stat-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .stat{background:var(--teal-light); border-radius:8px; padding:12px; text-align:center;}
+  .stat .num{font-size:1.15rem; font-weight:800; color:var(--navy);}
+  .stat .lab{font-size:.63rem; color:#5a6b76; text-transform:uppercase; letter-spacing:.4px;}
+  .recon{margin-top:10px; padding:10px; border-radius:8px; font-size:.8rem; font-weight:700; text-align:center;}
+  .recon.ok{background:#e2f3e6; color:#1f7a3d;}
+  .recon.bad{background:#fbeaea; color:var(--red);}
+  .row-flex{display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px dashed var(--line); font-size:.82rem;}
+  .row-flex:last-child{border-bottom:none;}
+  .row-flex b{color:var(--navy);}
+  .note{font-size:.68rem; color:#8a9aa4; margin-top:6px; line-height:1.4;}
+  .lock-banner{display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; background:#fff3e0; border:1px solid #e8c088; color:#8a5a12; padding:10px 12px; border-radius:8px; margin-top:12px; font-size:.78rem;}
+  .lock-banner button{font-size:.72rem; padding:6px 10px;}
+  .empty{text-align:center; padding:20px; color:#8a9aa4; font-size:.85rem;}
+  .credit{text-align:center; font-size:.66rem; color:#9aa8b0; margin-top:20px;}
+  .series-list{font-size:.68rem; color:#5a6b76; line-height:1.6; margin-top:4px;}
+  .govt-table td, .govt-table th{font-size:.72rem;}
+  #printArea{display:none;}
+  @media(max-width:560px){ .grid,.grid3,.stat-grid{grid-template-columns:1fr;} }
+  @media print{
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+    body *{visibility:hidden;}
+    #printArea, #printArea *{visibility:visible;}
+    #printArea{display:block; position:absolute; top:0; left:0; width:100%; padding:14px; font-family:'Segoe UI',system-ui,sans-serif; color:#16232e; background:#fff;}
+    #printArea h1{font-size:1.3rem; text-align:center; margin:0 0 2px; color:#0b2e4a; letter-spacing:.3px;}
+    #printArea h3{font-size:.9rem; text-align:center; margin:0 0 12px; font-weight:600; color:#0f7a72;}
+    #printArea .p-meta{display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; font-size:.82rem; margin-bottom:12px; background:#e4f3f1; border:1px solid #0f7a72; border-radius:6px; padding:8px 12px; font-weight:600; color:#0b2e4a;}
+    #printArea table{width:100%; border-collapse:collapse; margin-bottom:16px; box-shadow:0 1px 4px rgba(0,0,0,.08);}
+    #printArea th{background:#0b2e4a !important; color:#fff !important; border:1px solid #0b2e4a; padding:6px 6px; font-size:.7rem; text-align:center; text-transform:uppercase; letter-spacing:.3px;}
+    #printArea td{border:1px solid #c7cfd3; padding:5px 6px; font-size:.72rem; text-align:center;}
+    #printArea tbody tr:nth-child(even) td{background:#f3f6f5 !important;}
+    #printArea .p-sec-title{font-size:.88rem; font-weight:800; margin:14px 0 6px; padding:6px 10px; background:#0f7a72 !important; color:#fff !important; border-radius:5px;}
+    #printArea .p-sign{display:flex; justify-content:space-between; margin-top:44px; font-size:.8rem; color:#0b2e4a; font-weight:600;}
+    #printArea .p-total td{font-weight:800; background:#e4f3f1 !important; color:#0b2e4a !important;}
+    #printArea .p-recon{margin-top:6px; margin-bottom:14px; padding:8px 12px; border-radius:6px; font-size:.8rem; font-weight:700; background:#fbeed9 !important; color:#8a5a12 !important; border:1px solid #c07d1f;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>⛴ DSS Trip Sheet — Route No. 3</h1>
+    <p>Phoenix Bay ⇄ Bambooflat · Andaman &amp; Nicobar Administration</p>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('entry')">Daily Sheet</button>
+    <button class="tab-btn" onclick="showTab('daily')">Daily Report</button>
+    <button class="tab-btn" onclick="showTab('monthly')">Monthly Report</button>
+    <button class="tab-btn" onclick="showTab('settings')">Settings</button>
+  </div>
+
+  <div class="card" id="backupCard">
+    <h2>💾 Backup &amp; Restore</h2>
+    <div class="row-flex"><span>Saved on this device</span><b id="backupStatus">0 sheets</b></div>
+    <div class="toolbar" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+      <button class="btn-ghost" onclick="downloadBackup()">⬇ Download Backup</button>
+      <label class="btn-ghost" style="display:inline-flex; align-items:center; cursor:pointer; margin:0;">
+        ⬆ Restore from File
+        <input type="file" accept="application/json" onchange="restoreBackupFile(this)" style="display:none;">
+      </label>
+    </div>
+    <div class="note">Your entries auto-save on this device as you type, so a page refresh won't lose your work. Still, download a backup regularly — especially before clearing browser data, reinstalling, or switching devices — since Restore can bring every saved sheet back on any device or browser.</div>
+  </div>
+
+  <!-- ===================== ENTRY TAB ===================== -->
+  <div class="tabpage active" id="page-entry">
+
+    <div class="card">
+      <h2>Sheet Details</h2>
+      <div class="grid">
+        <div class="field"><label>Date</label><input type="date" id="hDate"></div>
+        <div class="field">
+          <label>Shift</label>
+          <select id="hShift">
+            <option value="Morning">Morning · 0600–1200</option>
+            <option value="Evening">Evening · 1200–2000</option>
+          </select>
+          <span class="shift-badge" id="staffBadge">S Mahesh</span>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="field"><label>Route No. / Counter</label><input type="text" id="hRoute" value="Route No. 3"></div>
+        <div class="field">
+          <label>Vessel (default for this shift)</label>
+          <select id="hVessel" onchange="applyDefaultVessel()">
+            <option>MV PILOBHABI</option>
+            <option>MV MUS</option>
+          </select>
+        </div>
+      </div>
+      <div class="note">Loading a Date + Shift that already has a saved sheet will bring it back up for editing.</div>
+    </div>
+
+    <div class="lock-banner" id="lockBanner" style="display:none;">
+      <span>🔒 <b>This sheet is finalized</b> — data entry is locked.</span>
+      <button class="btn-ghost" onclick="unlockSheet()">🔓 Unlock to Edit</button>
+    </div>
+
+    <div class="card" style="padding-left:6px; padding-right:6px;">
+      <h2 style="padding-left:10px; padding-right:10px;">Trip Sheet — Phoenix Bay ⇄ Bambooflat</h2>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Time</th><th>Vessel</th><th>Pax</th><th>2W</th><th>3W</th><th>3(WL)</th><th>4W</th><th>4(WL)</th><th>Cargo</th><th>Remarks</th></tr></thead>
+          <tbody id="tripBody"></tbody>
+          <tfoot><tr class="grand-row" id="grandTotalRow"></tr></tfoot>
+        </table>
+      </div>
+      <div class="scroll-hint">↔ swipe the table to see all columns</div>
+      <div class="note" style="padding-left:10px; padding-right:10px;">Times run in shift order, alternating start point between Bambooflat and Phoenix Bay. Trip Sheet Revenue counts only 3W, 3(WL), 4W and 4(WL) fares plus Cargo (charged at the 2W/Cargo rate) — Pax and 2W passenger counts are logged but not included in the revenue total.</div>
+    </div>
+
+    <div class="card">
+      <h2>Government Vehicles (No Charge)</h2>
+      <div class="note" style="margin-top:-6px; margin-bottom:8px;">For reference only — these do not pay and are not included in fare revenue or denomination tickets.</div>
+      <div class="table-scroll">
+        <table class="govt-table">
+          <thead><tr><th>Time</th><th>Direction</th><th>Vehicle No.</th><th>Department</th><th>Remarks</th><th></th></tr></thead>
+          <tbody id="govtBody"></tbody>
+        </table>
+      </div>
+      <button class="btn-ghost" style="margin-top:8px;" onclick="addGovtVehicle()">+ Add Government Vehicle</button>
+      <div class="row-flex" style="margin-top:6px;"><span>Total Government Vehicles</span><b id="govtCount">0</b></div>
+    </div>
+
+    <div class="card">
+      <h2>Online Tickets (Reference)</h2>
+      <div class="note" style="margin-top:-6px; margin-bottom:8px;">For passengers/vehicles who booked online instead of a physical ticket. These are already counted in the trip sheet numbers above, so this is just a reference log of which trip and ticket type were paid online — it explains why Denomination Revenue can run lower than the trip sheet count.</div>
+      <div class="table-scroll">
+        <table class="govt-table">
+          <thead><tr><th>Trip Time</th><th>Vehicle Type</th><th>No. of Tickets</th><th>Remarks</th><th></th></tr></thead>
+          <tbody id="onlineBody"></tbody>
+        </table>
+      </div>
+      <button class="btn-ghost" style="margin-top:8px;" onclick="addOnlineTicket()">+ Add Online Ticket</button>
+      <div class="row-flex" style="margin-top:6px;"><span>Total Online Tickets</span><b id="onlineCount">0</b></div>
+    </div>
+
+    <div class="card">
+      <h2>Denomination Tickets Issued</h2>
+      <div class="note" style="margin-top:-6px; margin-bottom:8px;">Add a series for every unbroken ticket-number range you used (e.g. 1201–1300, then a separate series for 1701–1800). Count and amount are worked out automatically.</div>
+      <div id="denomBlocks"></div>
+      <div class="row-flex" style="border-top:2px solid var(--line); padding-top:8px; margin-top:4px;">
+        <span><b>Grand Total — All Denominations</b></span>
+        <b id="denomGrandTotal">0 tickets · ₹0</b>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Reconciliation</h2>
+      <div class="stat">
+        <div class="num" id="denomRevenueOut">₹0</div>
+        <div class="lab">Denomination Revenue</div>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="saveSheet()">💾 Save This Sheet</button>
+    <button class="btn-ghost" id="finalizeBtn" style="width:100%; margin-top:8px; border-color:#e8c088; color:#8a5a12;" onclick="finalizeSheet()">🔒 Finalize This Sheet</button>
+    <div class="toolbar" style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="btn-ghost" onclick="clearForm()">↺ Clear Form</button>
+      <button class="btn-ghost" onclick="deleteCurrentSheet()">🗑 Delete Saved Sheet for this Date/Shift</button>
+      <button class="btn-ghost" onclick="exportSheetPDF()">📄 Export PDF</button>
+    </div>
+  </div>
+
+  <!-- ===================== DAILY REPORT TAB ===================== -->
+  <div class="tabpage" id="page-daily">
+    <div class="card">
+      <h2>Select Date</h2>
+      <input type="date" id="drDate" onchange="renderDailyReport()">
+      <button class="btn-ghost" style="margin-top:10px;" onclick="exportDailyPDF()">📄 Export Day PDF</button>
+    </div>
+    <div id="dailyReportBody"></div>
+  </div>
+
+  <!-- ===================== MONTHLY REPORT TAB ===================== -->
+  <div class="tabpage" id="page-monthly">
+    <div class="card">
+      <h2>Select Month</h2>
+      <input type="month" id="mrMonth" onchange="renderMonthlyReport()">
+      <div class="toolbar" style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn-ghost" onclick="exportMonthCSV()">⬇ Export Month CSV</button>
+        <button class="btn-ghost" onclick="exportMonthlyPDF()">📄 Export Month PDF</button>
+      </div>
+    </div>
+    <div id="monthlyReportBody"></div>
+
+    <div class="card">
+      <h2>Custom Date Range</h2>
+      <div class="note" style="margin-top:-6px; margin-bottom:8px;">For a range that spans shift changes, audits, or doesn't line up with a calendar month.</div>
+      <div class="grid">
+        <div class="field"><label>From</label><input type="date" id="rangeFrom"></div>
+        <div class="field"><label>To</label><input type="date" id="rangeTo"></div>
+      </div>
+      <button class="btn-primary" onclick="renderRangeReport()">View Range Summary</button>
+      <div class="toolbar" style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn-ghost" onclick="exportRangeCSV()">⬇ Export Range CSV</button>
+        <button class="btn-ghost" onclick="exportRangePDF()">📄 Export Range PDF</button>
+      </div>
+      <div id="rangeReportBody" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <!-- ===================== SETTINGS TAB ===================== -->
+  <div class="tabpage" id="page-settings">
+    <div class="card">
+      <h2>Fare Rates (₹ per ticket)</h2>
+      <div class="note" style="margin-top:-6px; margin-bottom:8px;">Changing a rate only affects sheets you start after saving — every sheet already saved keeps the rate that was in effect when it was recorded, so past totals and reports stay accurate.</div>
+      <div class="grid3" id="fareInputs"></div>
+      <div class="toolbar" style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn-primary" style="width:auto;" onclick="applyFareSettings()">💾 Save Fares</button>
+        <button class="btn-ghost" onclick="resetFareDefaults()">↺ Reset to Default</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Denomination Ticket Books</h2>
+      <div class="note" style="margin-top:-6px; margin-bottom:8px;">Rates for which you have pre-printed physical ticket books — used in the Denomination Tickets Issued section. Comma-separated, e.g. 16,65,100,190,210.</div>
+      <div class="field"><input type="text" id="ratesInput"></div>
+      <button class="btn-ghost" onclick="applyRatesSettings()">💾 Save Denominations</button>
+    </div>
+  </div>
+
+  <div class="credit">DSS Route No. 3 · Digital Trip Sheet · Mahesh Surada (DSS Staff)</div>
+</div>
+
+<div id="printArea"></div>
+
+<script>
+const DEFAULT_FARE = {pax:16, c2w:65, c3w:100, c3wl:210, c4w:190, c4wl:510};
+const DEFAULT_RATES = [16,65,100,190,210];
+let FARE = {...DEFAULT_FARE};
+let RATES = [...DEFAULT_RATES];
+const FARE_KEY = 'dss-r3-fares-v1';
+const SHIFT_ROWS = {
+  Morning: {outward:['0600','0800','1000','1200'], inward:['0700','0900','1100']},
+  Evening: {outward:['1400','1600','1800','2000'], inward:['1300','1500','1700','1900']}
+};
+const STORE_KEY = 'dss-r3-sheets-v2';
+const LOCATIONS = { outward:'Bambooflat', inward:'Phoenix Bay' };
+function mergeTripRows(sheetObj){
+  const merged = [
+    ...sheetObj.outward.map((r,i)=>({...r, kind:'outward', idx:i, loc:LOCATIONS.outward})),
+    ...sheetObj.inward.map((r,i)=>({...r, kind:'inward', idx:i, loc:LOCATIONS.inward}))
+  ];
+  merged.sort((a,b)=> a.time.localeCompare(b.time));
+  return merged;
+}
+const GOVT_TIME_OPTIONS = {
+  Morning: ['0600','0700','0800','0900','1000','1100','1200'],
+  Evening: ['1200','1300','1400','1500','1600','1700','1800','1900','2000']
+};
+const GOVT_DEPARTMENTS = [
+  'DHS (AMBULANCE)','Police Vehicle','Ambulance (Private)','Zilla Parishad Vehicle',
+  'High Court','Fire Service','DC South Andaman','CINCAN','APWD','Defence','Other'
+];
+let sheets = [];
+let draft = null;
+
+// ---------- STORAGE LAYER (cloud storage when available, localStorage fallback so data
+// survives outside Claude and a page refresh never loses saved sheets or in-progress work) ----------
+function cloudAvailable(){ return typeof window.storage !== 'undefined' && window.storage; }
+async function storageGet(key){
+  if(cloudAvailable()){
+    try{ const r = await window.storage.get(key); if(r && r.value !== undefined) return r.value; }
+    catch(e){ /* fall through to local */ }
+  }
+  try{ return localStorage.getItem(key); }catch(e){ return null; }
+}
+async function storageSet(key, value){
+  let ok = false;
+  if(cloudAvailable()){
+    try{ await window.storage.set(key, value); ok = true; }catch(e){}
+  }
+  try{ localStorage.setItem(key, value); ok = true; }catch(e){}
+  return ok;
+}
+function draftKeyFor(date, shift){ return `dss-r3-draft-${date}-${shift}`; }
+let autosaveTimer = null;
+function autosaveDraft(){
+  if(!draft) return;
+  clearTimeout(autosaveTimer);
+  autosaveTimer = setTimeout(()=>{ storageSet(draftKeyFor(draft.date, draft.shift), JSON.stringify(draft)); }, 500);
+}
+
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function blankRow(time, vessel){ return {time, vessel, pax:0,c2w:0,c3w:0,c3wl:0,c4w:0,c4wl:0,cargo:0,remarks:''}; }
+function blankDenom(){ const d={}; RATES.forEach(r=>d[r]=[]); return d; }
+
+function newDraft(date, shift, vessel, route){
+  const rows = SHIFT_ROWS[shift];
+  return {
+    date, shift, staff: shift==='Morning' ? 'S Mahesh' : 'P Shrikanth',
+    vessel, route,
+    outward: rows.outward.map(t=>blankRow(t, vessel)),
+    inward: rows.inward.map(t=>blankRow(t, vessel)),
+    denom: blankDenom(),
+    govtVehicles: [],
+    onlineTickets: [],
+    fareSnapshot: {...FARE},
+    locked: false
+  };
+}
+
+async function loadAll(){
+  try{
+    const raw = await storageGet(STORE_KEY);
+    sheets = raw ? JSON.parse(raw) : [];
+  }catch(e){ sheets = []; }
+  await loadFareSettings();
+  updateBackupStatus();
+}
+async function persist(){
+  try{ await storageSet(STORE_KEY, JSON.stringify(sheets)); }
+  catch(e){ console.error('save failed', e); }
+  updateBackupStatus();
+}
+
+async function loadFareSettings(){
+  try{
+    const raw = await storageGet(FARE_KEY);
+    if(raw){
+      const saved = JSON.parse(raw);
+      if(saved.fare) FARE = {...DEFAULT_FARE, ...saved.fare};
+      if(Array.isArray(saved.rates) && saved.rates.length) RATES = saved.rates;
+    }
+  }catch(e){ /* keep defaults */ }
+}
+async function saveFareSettings(){
+  await storageSet(FARE_KEY, JSON.stringify({fare:FARE, rates:RATES}));
+}
+
+// ---------- SETTINGS TAB ----------
+const FARE_LABELS = {pax:'Pax', c2w:'2W', c3w:'3W', c3wl:'3W (WL)', c4w:'4W', c4wl:'4W (WL)'};
+function renderSettingsForm(){
+  const wrap = document.getElementById('fareInputs');
+  wrap.innerHTML = Object.keys(FARE_LABELS).map(k=>`
+    <div class="field"><label>${FARE_LABELS[k]}</label><input type="number" min="0" id="fare_${k}" value="${FARE[k]}"></div>
+  `).join('');
+  document.getElementById('ratesInput').value = RATES.join(',');
+}
+
+async function applyFareSettings(){
+  const next = {...FARE};
+  Object.keys(FARE_LABELS).forEach(k=>{
+    const v = +document.getElementById('fare_'+k).value;
+    if(v>=0 && !isNaN(v)) next[k] = v;
+  });
+  FARE = next;
+  await saveFareSettings();
+  alert('Fare rates saved. These apply to sheets you start from now on — already-saved sheets keep their original rate.');
+}
+
+async function resetFareDefaults(){
+  if(!confirm('Reset fares and denomination rates to the original defaults?')) return;
+  FARE = {...DEFAULT_FARE};
+  RATES = [...DEFAULT_RATES];
+  await saveFareSettings();
+  renderSettingsForm();
+  if(draft){ renderAllDenomBlocks(); }
+  alert('Reset to default rates.');
+}
+
+async function applyRatesSettings(){
+  const raw = document.getElementById('ratesInput').value;
+  const parsed = raw.split(',').map(s=>+s.trim()).filter(n=> n>0 && !isNaN(n));
+  if(parsed.length===0){ alert('Enter at least one valid rate, comma-separated.'); return; }
+  RATES = [...new Set(parsed)].sort((a,b)=>a-b);
+  await saveFareSettings();
+  renderSettingsForm();
+  if(draft){ renderAllDenomBlocks(); }
+  alert('Denomination rates saved.');
+}
+
+function showTab(name){
+  document.querySelectorAll('.tabpage').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  [...document.querySelectorAll('.tab-btn')].find(b=>b.textContent.toLowerCase().includes(name==='entry'?'daily sheet':name)).classList.add('active');
+  if(name==='daily') renderDailyReport();
+  if(name==='monthly') renderMonthlyReport();
+  if(name==='settings') renderSettingsForm();
+}
+
+// ---------- ENTRY FORM ----------
+function updateStaffBadge(){
+  const shift = document.getElementById('hShift').value;
+  document.getElementById('staffBadge').textContent = shift==='Morning' ? 'S Mahesh' : 'P Shrikanth';
+}
+
+function findSheet(date, shift){
+  return sheets.find(s=>s.date===date && s.shift===shift);
+}
+
+async function loadFormFor(date, shift){
+  const vessel = document.getElementById('hVessel').value;
+  const route = document.getElementById('hRoute').value || 'Route No. 3';
+  const existing = findSheet(date, shift);
+  let autosaved = null;
+  try{
+    const raw = await storageGet(draftKeyFor(date, shift));
+    if(raw) autosaved = JSON.parse(raw);
+  }catch(e){ autosaved = null; }
+  // A finalized sheet is the source of truth — ignore any stale in-progress autosave for it.
+  if(existing && existing.locked){
+    draft = JSON.parse(JSON.stringify(existing));
+  }else{
+    draft = autosaved || (existing ? JSON.parse(JSON.stringify(existing)) : newDraft(date, shift, vessel, route));
+  }
+  if(!draft.govtVehicles) draft.govtVehicles = [];
+  if(!draft.onlineTickets) draft.onlineTickets = [];
+  document.getElementById('hVessel').value = draft.vessel;
+  document.getElementById('hRoute').value = draft.route;
+  renderTripTable();
+  renderAllDenomBlocks();
+  renderGovtVehicles();
+  renderOnlineTickets();
+  updateTotals();
+  applyLockUI();
+}
+
+function applyDefaultVessel(){
+  if(!draft || isLocked()) return;
+  const v = document.getElementById('hVessel').value;
+  draft.vessel = v;
+  (draft.outward||[]).forEach(r=> r.vessel = v);
+  (draft.inward||[]).forEach(r=> r.vessel = v);
+  renderTripTable();
+  autosaveDraft();
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('hDate').value = todayStr();
+  document.getElementById('hShift').addEventListener('change', ()=>{ updateStaffBadge(); loadFormFor(document.getElementById('hDate').value, document.getElementById('hShift').value); });
+  document.getElementById('hDate').addEventListener('change', ()=> loadFormFor(document.getElementById('hDate').value, document.getElementById('hShift').value));
+  document.getElementById('hRoute').addEventListener('input', ()=>{ if(draft && !isLocked()){ draft.route = document.getElementById('hRoute').value; autosaveDraft(); } });
+  updateStaffBadge();
+});
+
+function renderTripTable(){
+  const body = document.getElementById('tripBody');
+  const rows = mergeTripRows(draft);
+  body.innerHTML = rows.map(r=>{
+    const kind = r.kind, i = r.idx;
+    return `
+    <tr>
+      <td class="time-cell">${r.time}<span class="loc-tag">${r.loc}</span></td>
+      <td>
+        <select onchange="onRowInput('${kind}',${i},'vessel',this.value)">
+          <option ${r.vessel==='MV PILOBHABI'?'selected':''}>MV PILOBHABI</option>
+          <option ${r.vessel==='MV MUS'?'selected':''}>MV MUS</option>
+        </select>
+      </td>
+      <td><input type="number" min="0" value="${r.pax||''}" placeholder="0" oninput="onRowInput('${kind}',${i},'pax',this.value)"></td>
+      <td><input type="number" min="0" value="${r.c2w||''}" placeholder="0" oninput="onRowInput('${kind}',${i},'c2w',this.value)"></td>
+      <td><input type="number" min="0" value="${r.c3w||''}" placeholder="0" oninput="onRowInput('${kind}',${i},'c3w',this.value)"></td>
+      <td><input type="number" min="0" value="${r.c3wl||''}" placeholder="0" oninput="onRowInput('${kind}',${i},'c3wl',this.value)"></td>
+      <td><input type="number" min="0" value="${r.c4w||''}" placeholder="0" oninput="onRowInput('${kind}',${i},'c4w',this.value)"></td>
+      <td><input type="number" min="0" value="${r.c4wl||''}" placeholder="0" oninput="onRowInput('${kind}',${i},'c4wl',this.value)"></td>
+      <td><input type="number" min="0" value="${r.cargo||''}" placeholder="0" oninput="onRowInput('${kind}',${i},'cargo',this.value)"></td>
+      <td><input type="text" value="${r.remarks}" oninput="onRowInput('${kind}',${i},'remarks',this.value)"></td>
+    </tr>`;
+  }).join('');
+}
+
+function onRowInput(kind, i, field, val){
+  if(isLocked()) return;
+  const row = draft[kind][i];
+  row[field] = (field==='vessel' || field==='remarks') ? val : (+val || 0);
+  updateTotals();
+  autosaveDraft();
+}
+
+// ---------- GOVERNMENT VEHICLES ----------
+function renderGovtVehicles(){
+  const body = document.getElementById('govtBody');
+  const list = draft.govtVehicles;
+  const allTimes = GOVT_TIME_OPTIONS[draft.shift] || [];
+  if(list.length===0){
+    body.innerHTML = `<tr><td colspan="6" style="color:#8a9aa4; padding:10px;">No government vehicles logged</td></tr>`;
+  }else{
+    body.innerHTML = list.map((g,i)=>{
+      const prevTime = i>0 ? list[i-1].time : '';
+      const options = prevTime ? allTimes.filter(t=>t>=prevTime) : allTimes;
+      const timeOpts = options.map(t=>`<option value="${t}" ${g.time===t?'selected':''}>${t}</option>`).join('');
+      const deptOpts = GOVT_DEPARTMENTS.map(d=>`<option value="${d}" ${g.department===d?'selected':''}>${d}</option>`).join('');
+      return `<tr data-i="${i}">
+        <td style="min-width:90px;">
+          <select onchange="onGovtInput(${i},'time',this.value)">
+            <option value="">Select</option>
+            ${timeOpts}
+          </select>
+        </td>
+        <td style="min-width:90px;">
+          <select onchange="onGovtInput(${i},'direction',this.value)">
+            <option value="Outward" ${g.direction==='Outward'?'selected':''}>Outward</option>
+            <option value="Inward" ${g.direction==='Inward'?'selected':''}>Inward</option>
+          </select>
+        </td>
+        <td style="min-width:110px;"><input type="text" value="${g.vehicleNo}" placeholder="AN01-1234" oninput="onGovtInput(${i},'vehicleNo',this.value)"></td>
+        <td style="min-width:150px;">
+          <select onchange="onGovtInput(${i},'department',this.value)">
+            <option value="">Select</option>
+            ${deptOpts}
+          </select>
+        </td>
+        <td style="min-width:100px;"><input type="text" value="${g.remarks}" oninput="onGovtInput(${i},'remarks',this.value)"></td>
+        <td><button class="btn-danger" onclick="removeGovtVehicle(${i})">✕</button></td>
+      </tr>`;
+    }).join('');
+  }
+  document.getElementById('govtCount').textContent = list.length;
+}
+
+function addGovtVehicle(){
+  if(isLocked()) return;
+  draft.govtVehicles.push({time:'', direction:'Outward', vehicleNo:'', department:'', remarks:''});
+  renderGovtVehicles();
+  autosaveDraft();
+}
+function removeGovtVehicle(i){
+  if(isLocked()) return;
+  draft.govtVehicles.splice(i,1);
+  renderGovtVehicles();
+  autosaveDraft();
+}
+function onGovtInput(i, field, val){
+  if(isLocked()) return;
+  draft.govtVehicles[i][field] = val;
+  if(field==='time'){ renderGovtVehicles(); autosaveDraft(); return; }
+  document.getElementById('govtCount').textContent = draft.govtVehicles.length;
+  autosaveDraft();
+}
+
+// ---------- ONLINE TICKETS (REFERENCE) ----------
+const ONLINE_TYPES = ['Pax','2W','3W','3(WL)','4W','4(WL)'];
+function renderOnlineTickets(){
+  const body = document.getElementById('onlineBody');
+  const list = draft.onlineTickets;
+  const allTimes = GOVT_TIME_OPTIONS[draft.shift] || [];
+  if(list.length===0){
+    body.innerHTML = `<tr><td colspan="5" style="color:#8a9aa4; padding:10px;">No online tickets logged</td></tr>`;
+  }else{
+    body.innerHTML = list.map((o,i)=>{
+      const prevTime = i>0 ? list[i-1].time : '';
+      const options = prevTime ? allTimes.filter(t=>t>=prevTime) : allTimes;
+      const timeOpts = options.map(t=>`<option value="${t}" ${o.time===t?'selected':''}>${t}</option>`).join('');
+      const typeOpts = ONLINE_TYPES.map(t=>`<option value="${t}" ${o.type===t?'selected':''}>${t}</option>`).join('');
+      return `<tr data-i="${i}">
+        <td style="min-width:90px;">
+          <select onchange="onOnlineInput(${i},'time',this.value)">
+            <option value="">Select</option>
+            ${timeOpts}
+          </select>
+        </td>
+        <td style="min-width:90px;">
+          <select onchange="onOnlineInput(${i},'type',this.value)">
+            <option value="">Select</option>
+            ${typeOpts}
+          </select>
+        </td>
+        <td style="min-width:70px;"><input type="number" min="1" value="${o.count||1}" oninput="onOnlineInput(${i},'count',this.value)"></td>
+        <td style="min-width:100px;"><input type="text" value="${o.remarks}" oninput="onOnlineInput(${i},'remarks',this.value)"></td>
+        <td><button class="btn-danger" onclick="removeOnlineTicket(${i})">✕</button></td>
+      </tr>`;
+    }).join('');
+  }
+  document.getElementById('onlineCount').textContent = list.reduce((a,o)=>a+(+o.count||1),0);
+}
+
+function addOnlineTicket(){
+  if(isLocked()) return;
+  draft.onlineTickets.push({time:'', type:'', count:1, remarks:''});
+  renderOnlineTickets();
+  autosaveDraft();
+}
+function removeOnlineTicket(i){
+  if(isLocked()) return;
+  draft.onlineTickets.splice(i,1);
+  renderOnlineTickets();
+  autosaveDraft();
+}
+function onOnlineInput(i, field, val){
+  if(isLocked()) return;
+  draft.onlineTickets[i][field] = field==='count' ? (+val||1) : val;
+  if(field==='time'){ renderOnlineTickets(); autosaveDraft(); return; }
+  document.getElementById('onlineCount').textContent = draft.onlineTickets.reduce((a,o)=>a+(+o.count||1),0);
+  autosaveDraft();
+}
+
+function sumCol(rows, field){ return rows.reduce((a,r)=>a+(+r[field]||0),0); }
+function fareFor(sheetObj){ return (sheetObj && sheetObj.fareSnapshot) || FARE; }
+function rowRevenue(r, f){ return r.c3w*f.c3w + r.c3wl*f.c3wl + r.c4w*f.c4w + r.c4wl*f.c4wl + (r.cargo||0)*f.c2w; }
+function sheetRevenue(sheetObj){
+  const f = fareFor(sheetObj);
+  const combined = [...(sheetObj.outward||[]), ...(sheetObj.inward||[])];
+  return combined.reduce((sum,r)=> sum + rowRevenue(r,f), 0);
+}
+
+function totalRowHTML(label, rows, span2=false){
+  return `<td colspan="2">${label}</td>
+    <td>${sumCol(rows,'pax')}</td><td>${sumCol(rows,'c2w')}</td><td>${sumCol(rows,'c3w')}</td>
+    <td>${sumCol(rows,'c3wl')}</td><td>${sumCol(rows,'c4w')}</td><td>${sumCol(rows,'c4wl')}</td>
+    <td>${sumCol(rows,'cargo')}</td><td></td>`;
+}
+
+function updateTotals(){
+  if(!draft) return;
+  const combined = [...draft.outward, ...draft.inward];
+  document.getElementById('grandTotalRow').innerHTML = totalRowHTML('Total', combined);
+  updateReconciliation();
+}
+
+// ---------- DENOMINATION BLOCKS ----------
+function renderAllDenomBlocks(){
+  RATES.forEach(r=>{ if(!draft.denom[r]) draft.denom[r] = []; });
+  document.getElementById('denomBlocks').innerHTML = RATES.map(r=>`
+    <div class="denom-block">
+      <div class="denom-head"><b>₹${r} Tickets</b><button class="btn-ghost" onclick="addSeries(${r})">+ Add Series</button></div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>From</th><th>To</th><th>Count</th><th>Amount</th><th></th></tr></thead>
+          <tbody id="denomBody${r}"></tbody>
+        </table>
+      </div>
+      <div class="denom-sub" id="denomSub${r}">Subtotal: 0 tickets · ₹0</div>
+    </div>`).join('');
+  RATES.forEach(r=> renderDenomBlock(r));
+}
+
+function renderDenomBlock(rate){
+  const body = document.getElementById('denomBody'+rate);
+  const list = draft.denom[rate];
+  if(list.length===0){
+    body.innerHTML = `<tr><td colspan="5" style="color:#8a9aa4; padding:10px;">No series added</td></tr>`;
+  }else{
+    body.innerHTML = list.map((e,i)=>`
+      <tr data-idx="${i}">
+        <td><input type="number" min="1" value="${e.from}" oninput="onSeriesInput(${rate},${i},'from',this.value)"></td>
+        <td><input type="number" min="1" value="${e.to}" oninput="onSeriesInput(${rate},${i},'to',this.value)"></td>
+        <td class="scount">0</td>
+        <td class="samount">₹0</td>
+        <td><button class="btn-danger" onclick="removeSeries(${rate},${i})">✕</button></td>
+      </tr>`).join('');
+  }
+  list.forEach((e,i)=> updateSeriesRowDisplay(rate,i));
+  updateDenomSubtotal(rate);
+}
+
+function addSeries(rate){
+  if(isLocked()) return;
+  draft.denom[rate].push({from:'', to:''});
+  renderDenomBlock(rate);
+  autosaveDraft();
+}
+function removeSeries(rate, idx){
+  if(isLocked()) return;
+  draft.denom[rate].splice(idx,1);
+  renderDenomBlock(rate);
+  updateGrandDenomTotal();
+  updateReconciliation();
+  autosaveDraft();
+}
+
+function onSeriesInput(rate, idx, field, val){
+  if(isLocked()) return;
+  draft.denom[rate][idx][field] = val==='' ? '' : +val;
+  updateSeriesRowDisplay(rate, idx);
+  updateDenomSubtotal(rate);
+  autosaveDraft();
+}
+
+function seriesCount(e){
+  const from = +e.from||0, to = +e.to||0;
+  return (from>0 && to>=from) ? (to-from+1) : 0;
+}
+
+function updateSeriesRowDisplay(rate, idx){
+  const e = draft.denom[rate][idx];
+  const count = seriesCount(e);
+  const amount = count*rate;
+  const tr = document.querySelector(`#denomBody${rate} tr[data-idx="${idx}"]`);
+  if(tr){
+    tr.querySelector('.scount').textContent = count;
+    tr.querySelector('.samount').textContent = `₹${amount.toLocaleString('en-IN')}`;
+  }
+  updateGrandDenomTotal();
+  updateReconciliation();
+}
+
+function updateDenomSubtotal(rate){
+  const list = draft.denom[rate];
+  const count = list.reduce((a,e)=>a+seriesCount(e),0);
+  const amount = count*rate;
+  document.getElementById('denomSub'+rate).textContent = `Subtotal: ${count} tickets · ₹${amount.toLocaleString('en-IN')}`;
+}
+
+function denomGrandTotals(denomObj){
+  let count=0, amount=0;
+  RATES.forEach(r=>{
+    (denomObj[r]||[]).forEach(e=>{ const c = seriesCount(e); count+=c; amount += c*r; });
+  });
+  return {count, amount};
+}
+
+function updateGrandDenomTotal(){
+  const {count, amount} = denomGrandTotals(draft.denom);
+  document.getElementById('denomGrandTotal').textContent = `${count} tickets · ₹${amount.toLocaleString('en-IN')}`;
+  document.getElementById('denomRevenueOut').textContent = `₹${amount.toLocaleString('en-IN')}`;
+}
+
+function updateReconciliation(){
+  if(!draft) return;
+  const {amount: denomRevenue} = denomGrandTotals(draft.denom);
+  const el = document.getElementById('denomRevenueOut');
+  if(el) el.textContent = `₹${denomRevenue.toLocaleString('en-IN')}`;
+}
+
+// ---------- BACKUP / RESTORE ----------
+function updateBackupStatus(){
+  const el = document.getElementById('backupStatus');
+  if(!el) return;
+  el.textContent = `${sheets.length} sheet${sheets.length!==1?'s':''} saved on this device`;
+}
+
+function downloadBackup(){
+  const payload = { app:'dss-trip-sheet', route:'Route No. 3', exportedAt:new Date().toISOString(), sheets };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `DSS-R3-Backup-${todayStr()}.json`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function restoreBackupFile(fileInput){
+  const file = fileInput.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try{
+      const parsed = JSON.parse(e.target.result);
+      const incoming = Array.isArray(parsed) ? parsed : parsed.sheets;
+      if(!Array.isArray(incoming)) throw new Error('not a backup file');
+      const ok = confirm(`This backup file has ${incoming.length} saved sheet(s). Restoring will merge them into what's already on this device — any sheet with the same date and shift will be overwritten by the backup. Continue?`);
+      if(!ok){ fileInput.value=''; return; }
+      incoming.forEach(inc=>{
+        const idx = sheets.findIndex(s=>s.date===inc.date && s.shift===inc.shift);
+        if(idx>=0) sheets[idx] = inc; else sheets.push(inc);
+      });
+      await persist();
+      alert(`Restored. This device now has ${sheets.length} saved sheet(s).`);
+      loadFormFor(document.getElementById('hDate').value, document.getElementById('hShift').value);
+      if(document.getElementById('page-daily').classList.contains('active')) renderDailyReport();
+      if(document.getElementById('page-monthly').classList.contains('active')) renderMonthlyReport();
+    }catch(err){
+      alert("Couldn't read this file — make sure it's a backup .json exported from this app.");
+    }
+    fileInput.value='';
+  };
+  reader.readAsText(file);
+}
+
+// ---------- SAVE / CLEAR / DELETE / LOCK ----------
+function isLocked(){ return !!(draft && draft.locked); }
+
+function saveSheet(){
+  if(!draft){ alert('Pick a date and shift first.'); return; }
+  draft.route = document.getElementById('hRoute').value || 'Route No. 3';
+  draft.id = draft.id || (Date.now().toString(36)+Math.random().toString(36).slice(2,6));
+  const idx = sheets.findIndex(s=>s.date===draft.date && s.shift===draft.shift);
+  if(idx>=0) sheets[idx] = draft; else sheets.push(draft);
+  persist();
+  alert(`Saved: ${draft.date} — ${draft.shift} shift (${draft.staff})`);
+}
+
+function finalizeSheet(){
+  if(!draft){ alert('Pick a date and shift first.'); return; }
+  if(!confirm('Finalize this sheet? It will be locked from further edits until you unlock it again.')) return;
+  draft.locked = true;
+  draft.finalizedAt = new Date().toISOString();
+  saveSheet();
+  applyLockUI();
+}
+
+function unlockSheet(){
+  if(!draft) return;
+  if(!confirm('Unlock this sheet for editing? Make sure this is intentional.')) return;
+  draft.locked = false;
+  saveSheet();
+  applyLockUI();
+}
+
+function applyLockUI(){
+  const locked = isLocked();
+  document.querySelectorAll('#tripBody input, #tripBody select').forEach(el=> el.disabled = locked);
+  document.querySelectorAll('#denomBlocks input, #denomBlocks button').forEach(el=> el.disabled = locked);
+  document.querySelectorAll('#govtBody input, #govtBody select, #govtBody button').forEach(el=> el.disabled = locked);
+  document.querySelectorAll('#onlineBody input, #onlineBody select, #onlineBody button').forEach(el=> el.disabled = locked);
+  document.getElementById('hRoute').disabled = locked;
+  document.getElementById('hVessel').disabled = locked;
+  const addGovtBtn = document.querySelector('button[onclick="addGovtVehicle()"]');
+  if(addGovtBtn) addGovtBtn.disabled = locked;
+  const addOnlineBtn = document.querySelector('button[onclick="addOnlineTicket()"]');
+  if(addOnlineBtn) addOnlineBtn.disabled = locked;
+  document.getElementById('lockBanner').style.display = locked ? 'flex' : 'none';
+  document.getElementById('finalizeBtn').style.display = locked ? 'none' : 'inline-block';
+}
+
+function clearForm(){
+  const date = document.getElementById('hDate').value || todayStr();
+  const shift = document.getElementById('hShift').value;
+  const vessel = document.getElementById('hVessel').value;
+  const route = document.getElementById('hRoute').value || 'Route No. 3';
+  draft = newDraft(date, shift, vessel, route);
+  renderTripTable();
+  renderAllDenomBlocks(); renderGovtVehicles(); renderOnlineTickets(); updateTotals();
+  storageSet(draftKeyFor(date, shift), JSON.stringify(draft));
+  applyLockUI();
+}
+
+function deleteCurrentSheet(){
+  const date = document.getElementById('hDate').value;
+  const shift = document.getElementById('hShift').value;
+  if(isLocked()){ alert('This sheet is finalized. Unlock it first before deleting.'); return; }
+  if(!confirm(`Delete the saved sheet for ${date} (${shift} shift)? This cannot be undone.`)) return;
+  sheets = sheets.filter(s=>!(s.date===date && s.shift===shift));
+  persist();
+  clearForm();
+}
+
+// ---------- DAILY REPORT ----------
+function renderDailyReport(){
+  const date = document.getElementById('drDate').value;
+  const container = document.getElementById('dailyReportBody');
+  if(!date){ container.innerHTML = ''; return; }
+  const daySheets = sheets.filter(s=>s.date===date);
+  if(daySheets.length===0){
+    container.innerHTML = `<div class="card"><div class="empty">No sheets saved for ${date} yet.</div></div>`;
+    return;
+  }
+
+  let html = '';
+  let dayTicketTotal=0, dayRevenueTotal=0, dayDenomTotal=0, dayGovtTotal=0;
+  const denomAgg = blankDenom();
+  const govtAgg = [];
+
+  daySheets.sort((a,b)=> a.shift==='Morning'?-1:1).forEach(s=>{
+    const combined = [...(s.outward||[]), ...(s.inward||[])];
+    const tix = combined.reduce((a,r)=> a+r.pax+r.c2w+r.c3w+r.c3wl+r.c4w+r.c4wl,0);
+    const rev = sheetRevenue(s);
+    const {count:dc, amount:da} = denomGrandTotals(s.denom);
+    const gv = s.govtVehicles || [];
+    dayTicketTotal += tix; dayRevenueTotal += rev; dayDenomTotal += da; dayGovtTotal += gv.length;
+    RATES.forEach(r=> denomAgg[r].push(...((s.denom&&s.denom[r])||[])));
+    govtAgg.push(...gv.map(g=>({...g, shift:s.shift})));
+
+    html += `<div class="card">
+      <h2>${s.shift} Shift — ${s.staff} (${s.vessel})</h2>
+      <div class="row-flex"><span>Tickets Sold</span><b>${tix}</b></div>
+      <div class="row-flex"><span>Trip Sheet Revenue</span><b>₹${rev.toLocaleString('en-IN')}</b></div>
+      <div class="row-flex"><span>Denomination Revenue</span><b>₹${da.toLocaleString('en-IN')}</b></div>
+      <div class="row-flex"><span>Average Collection / Trip</span><b>₹${(rev/(combined.length||1)).toFixed(0)}</b></div>
+      <div class="row-flex"><span>Government Vehicles (No Charge)</span><b>${gv.length}</b></div>
+    </div>`;
+  });
+
+  const dayDenom = denomGrandTotals(denomAgg);
+  html += `<div class="card">
+    <h2>Day Total — ${date}</h2>
+    <div class="stat-grid">
+      <div class="stat"><div class="num">${dayDenom.count}</div><div class="lab">Denomination Tickets Sold</div></div>
+      <div class="stat"><div class="num">₹${dayRevenueTotal.toLocaleString('en-IN')}</div><div class="lab">Trip Sheet Revenue</div></div>
+    </div>
+    <div class="row-flex" style="margin-top:8px;"><span>Denomination Grand Total</span><b>${dayDenom.count} tickets · ₹${dayDenom.amount.toLocaleString('en-IN')}</b></div>
+    <div class="row-flex"><span>Government Vehicles (No Charge)</span><b>${dayGovtTotal}</b></div>
+    <h2 style="margin-top:14px;">Denomination Series Used Today</h2>
+    ${RATES.map(r=>{
+      const list = denomAgg[r].filter(e=>seriesCount(e)>0);
+      if(list.length===0) return '';
+      return `<div class="series-list"><b>₹${r}:</b> ${list.map(e=>`${e.from}–${e.to} (${seriesCount(e)})`).join(', ')}</div>`;
+    }).join('')}
+    ${govtAgg.length ? `<h2 style="margin-top:14px;">Government Vehicles — Detail</h2>
+      ${govtAgg.map(g=>`<div class="series-list">${g.shift} · ${g.time||'—'} · ${g.direction} · <b>${g.vehicleNo||'—'}</b> · ${g.department||'—'}${g.remarks?' · '+g.remarks:''}</div>`).join('')}` : ''}
+  </div>`;
+
+  container.innerHTML = html;
+}
+
+// ---------- MONTHLY REPORT ----------
+function renderMonthlyReport(){
+  const month = document.getElementById('mrMonth').value;
+  const container = document.getElementById('monthlyReportBody');
+  if(!month){ container.innerHTML=''; return; }
+  const monthSheets = sheets.filter(s=>s.date.slice(0,7)===month);
+  if(monthSheets.length===0){
+    container.innerHTML = `<div class="card"><div class="empty">No sheets saved for this month yet.</div></div>`;
+    return;
+  }
+
+  let totalRevenue=0, totalTickets=0, totalGovt=0;
+  const byType = {pax:0,c2w:0,c3w:0,c3wl:0,c4w:0,c4wl:0};
+  const byStaff = {}; // staff -> {revenue, tickets, days:Set, govt}
+  const denomAgg = blankDenom();
+
+  monthSheets.forEach(s=>{
+    const combined = [...(s.outward||[]), ...(s.inward||[])];
+    const tix = combined.reduce((a,r)=> a+r.pax+r.c2w+r.c3w+r.c3wl+r.c4w+r.c4wl,0);
+    const rev = sheetRevenue(s);
+    const gv = (s.govtVehicles || []).length;
+    totalRevenue += rev; totalTickets += tix; totalGovt += gv;
+    combined.forEach(r=>{ Object.keys(byType).forEach(k=> byType[k]+=r[k]); });
+
+    byStaff[s.staff] = byStaff[s.staff] || {revenue:0, tickets:0, days:new Set(), shift:s.shift, govt:0};
+    byStaff[s.staff].revenue += rev;
+    byStaff[s.staff].tickets += tix;
+    byStaff[s.staff].govt += gv;
+    byStaff[s.staff].days.add(s.date);
+
+    RATES.forEach(r=> denomAgg[r].push(...((s.denom&&s.denom[r])||[])));
+  });
+
+  const monthDenom = denomGrandTotals(denomAgg);
+
+  let html = `<div class="card">
+    <h2>Month Total</h2>
+    <div class="stat-grid">
+      <div class="stat"><div class="num">₹${totalRevenue.toLocaleString('en-IN')}</div><div class="lab">Total Revenue</div></div>
+      <div class="stat"><div class="num">${monthDenom.count}</div><div class="lab">Denomination Tickets Sold</div></div>
+    </div>
+    <div class="row-flex" style="margin-top:8px;"><span>Government Vehicles (No Charge)</span><b>${totalGovt}</b></div>
+  </div>
+
+  <div class="card">
+    <h2>By Ticket Type</h2>
+    <div class="note" style="margin-top:-6px; margin-bottom:8px;">Ticket counts are exact. Amounts use today's fare rates — if rates changed mid-month, this breakdown is approximate; the Month Total above always uses the fare that was actually in effect for each saved sheet. Pax and 2W are counted here for reference but are not part of Trip Sheet Revenue.</div>
+    ${Object.keys(byType).map(k=>{
+      const lbl = {pax:'Pax',c2w:'2W',c3w:'3W',c3wl:'3WL',c4w:'4W',c4wl:'4WL'}[k];
+      const excluded = (k==='pax' || k==='c2w');
+      return `<div class="row-flex"><span>${lbl} (₹${FARE[k]})${excluded?' — not in revenue':''}</span><b>${byType[k]} tix · ₹${(byType[k]*FARE[k]).toLocaleString('en-IN')}</b></div>`;
+    }).join('')}
+  </div>
+
+  <div class="card">
+    <h2>Denomination Stock Used (Month)</h2>
+    ${RATES.map(r=>{
+      const count = denomAgg[r].reduce((a,e)=>a+seriesCount(e),0);
+      return `<div class="row-flex"><span>₹${r} ticket</span><b>${count} used · ₹${(count*r).toLocaleString('en-IN')}</b></div>`;
+    }).join('')}
+    <div class="row-flex" style="border-top:1px solid var(--line); padding-top:6px;"><span><b>Grand Total</b></span><b>${monthDenom.count} tickets · ₹${monthDenom.amount.toLocaleString('en-IN')}</b></div>
+  </div>
+
+  <div class="card">
+    <h2>By Staff / Shift — Averages</h2>
+    ${Object.keys(byStaff).map(name=>{
+      const d = byStaff[name];
+      const days = d.days.size;
+      return `<div class="row-flex"><span>${name} (${d.shift})</span><b>${d.tickets} tix · ₹${d.revenue.toLocaleString('en-IN')} over ${days} day${days!==1?'s':''} · avg ₹${(d.revenue/days).toFixed(0)}/day · ${d.govt} govt veh.</b></div>`;
+    }).join('')}
+  </div>`;
+
+  container.innerHTML = html;
+}
+
+function exportMonthCSV(){
+  const month = document.getElementById('mrMonth').value;
+  if(!month){ alert('Pick a month first.'); return; }
+  const monthSheets = sheets.filter(s=>s.date.slice(0,7)===month);
+  if(monthSheets.length===0){ alert('No data for this month.'); return; }
+  const header = ['Date','Shift','Staff','Vessel','Pax','2W','3W','3WL','4W','4WL','TripRevenue','DenomTickets','DenomRevenue','GovtVehicles'];
+  const rows = monthSheets.map(s=>{
+    const combined = [...(s.outward||[]), ...(s.inward||[])];
+    const sums = {pax:0,c2w:0,c3w:0,c3wl:0,c4w:0,c4wl:0};
+    combined.forEach(r=> Object.keys(sums).forEach(k=> sums[k]+=r[k]));
+    const rev = sheetRevenue(s);
+    const {count,amount} = denomGrandTotals(s.denom);
+    return [s.date,s.shift,s.staff,s.vessel,sums.pax,sums.c2w,sums.c3w,sums.c3wl,sums.c4w,sums.c4wl,rev,count,amount,(s.govtVehicles||[]).length];
+  });
+  const csv = [header, ...rows].map(r=>r.join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `DSS-R3-Monthly-${month}.csv`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ---------- PDF EXPORT (via browser print) ----------
+function tripTableHTML(title, rows){
+  return `<div class="p-sec-title">${title}</div>
+  <table>
+    <thead><tr><th>Time</th><th>Vessel</th><th>Pax</th><th>2W</th><th>3W</th><th>3(WL)</th><th>4W</th><th>4(WL)</th><th>Cargo</th><th>Remarks</th></tr></thead>
+    <tbody>
+      ${rows.map(r=>`<tr><td>${r.time}${r.loc?` (${r.loc})`:''}</td><td>${r.vessel}</td><td>${r.pax}</td><td>${r.c2w}</td><td>${r.c3w}</td><td>${r.c3wl}</td><td>${r.c4w}</td><td>${r.c4wl}</td><td>${r.cargo}</td><td>${r.remarks||''}</td></tr>`).join('')}
+      <tr class="p-total"><td colspan="2">Total</td><td>${sumCol(rows,'pax')}</td><td>${sumCol(rows,'c2w')}</td><td>${sumCol(rows,'c3w')}</td><td>${sumCol(rows,'c3wl')}</td><td>${sumCol(rows,'c4w')}</td><td>${sumCol(rows,'c4wl')}</td><td>${sumCol(rows,'cargo')}</td><td></td></tr>
+    </tbody>
+  </table>`;
+}
+
+function mergeContiguousSeries(list){
+  const valid = (list||[])
+    .filter(e=>seriesCount(e)>0)
+    .map(e=>({from:+e.from, to:+e.to}))
+    .sort((a,b)=> a.from-b.from);
+  const merged = [];
+  valid.forEach(e=>{
+    const last = merged[merged.length-1];
+    if(last && e.from <= last.to+1){
+      last.to = Math.max(last.to, e.to);
+    }else{
+      merged.push({from:e.from, to:e.to});
+    }
+  });
+  return merged;
+}
+
+function denomTableHTML(denomObj){
+  const usedRows = RATES.map(r=>{
+    const merged = mergeContiguousSeries(denomObj[r]||[]);
+    if(merged.length===0) return '';
+    return merged.map(e=>{
+      const c = e.to-e.from+1;
+      return `<tr><td>₹${r}</td><td>${e.from}</td><td>${e.to}</td><td>${c}</td><td>₹${(c*r).toLocaleString('en-IN')}</td></tr>`;
+    }).join('');
+  }).join('');
+  const {count,amount} = denomGrandTotals(denomObj);
+  return `<div class="p-sec-title">Denomination Tickets Issued</div>
+  <table>
+    <thead><tr><th>Rate</th><th>From</th><th>To</th><th>No. of Tickets</th><th>Amount</th></tr></thead>
+    <tbody>
+      ${usedRows || '<tr><td colspan="5">No tickets recorded</td></tr>'}
+      <tr class="p-total"><td colspan="3">Grand Total</td><td>${count}</td><td>₹${amount.toLocaleString('en-IN')}</td></tr>
+    </tbody>
+  </table>`;
+}
+
+function govtTableHTML(list){
+  if(!list || list.length===0) return '';
+  return `<div class="p-sec-title">Government Vehicles (No Charge)</div>
+  <table>
+    <thead><tr><th>Time</th><th>Direction</th><th>Vehicle No.</th><th>Department</th><th>Remarks</th></tr></thead>
+    <tbody>
+      ${list.map(g=>`<tr><td>${g.time||''}</td><td>${g.direction}</td><td>${g.vehicleNo||''}</td><td>${g.department||''}</td><td>${g.remarks||''}</td></tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+function onlineTableHTML(list){
+  if(!list || list.length===0) return '';
+  const total = list.reduce((a,o)=>a+(+o.count||1),0);
+  return `<div class="p-sec-title">Online Tickets (Reference)</div>
+  <table>
+    <thead><tr><th>Trip Time</th><th>Vehicle Type</th><th>No. of Tickets</th><th>Remarks</th></tr></thead>
+    <tbody>
+      ${list.map(o=>`<tr><td>${o.time||''}</td><td>${o.type||''}</td><td>${o.count||1}</td><td>${o.remarks||''}</td></tr>`).join('')}
+      <tr class="p-total"><td colspan="2">Total</td><td>${total}</td><td></td></tr>
+    </tbody>
+  </table>`;
+}
+
+function monthGovtTableHTML(list){
+  if(!list || list.length===0) return '';
+  return `<div class="p-sec-title">Government Vehicles (No Charge) — Month</div>
+  <div class="note" style="margin-top:-4px; margin-bottom:8px;">Outward = From Bambooflat · Inward = From Phoenix Bay</div>
+  <table>
+    <thead><tr><th>Date</th><th>Shift</th><th>Time</th><th>Direction</th><th>Vehicle No.</th><th>Department</th><th>Remarks</th></tr></thead>
+    <tbody>
+      ${list.map(g=>`<tr><td>${g.date||''}</td><td>${g.shift||''}</td><td>${g.time||''}</td><td>${g.direction||''}</td><td>${g.vehicleNo||''}</td><td>${g.department||''}</td><td>${g.remarks||''}</td></tr>`).join('')}
+      <tr class="p-total"><td colspan="6">Total Government Vehicles</td><td>${list.length}</td></tr>
+    </tbody>
+  </table>`;
+}
+
+function monthOnlineTableHTML(list){
+  if(!list || list.length===0) return '';
+  const groups = {};
+  list.forEach(o=>{
+    const key = `${o.date}|${o.shift}|${o.time}|${o.type}`;
+    if(!groups[key]) groups[key] = {date:o.date, shift:o.shift, time:o.time, type:o.type, count:0};
+    groups[key].count += (+o.count||1);
+  });
+  const rows = Object.values(groups).sort((a,b)=> a.date===b.date ? (a.shift==='Morning'?-1:1) : a.date.localeCompare(b.date));
+  const total = rows.reduce((a,g)=>a+g.count,0);
+  return `<div class="p-sec-title">Online Tickets (Reference) — Month</div>
+  <div class="note" style="margin-top:-4px; margin-bottom:8px;">Multiple online tickets for the same trip/type are combined into one row with a total count.</div>
+  <table>
+    <thead><tr><th>Date</th><th>Shift</th><th>Trip Time</th><th>Vehicle Type</th><th>Total Vehicles</th></tr></thead>
+    <tbody>
+      ${rows.map(g=>`<tr><td>${g.date||''}</td><td>${g.shift||''}</td><td>${g.time||''}</td><td>${g.type||''}</td><td>${g.count}</td></tr>`).join('')}
+      <tr class="p-total"><td colspan="4">Total Online Tickets</td><td>${total}</td></tr>
+    </tbody>
+  </table>`;
+}
+
+function doPrint(html){
+  document.getElementById('printArea').innerHTML = html;
+  window.print();
+}
+
+function exportSheetPDF(){
+  if(!draft){ alert('Nothing to export yet.'); return; }
+  try{
+  const combined = [...(draft.outward||[]), ...(draft.inward||[])];
+  const tripRevenue = sheetRevenue(draft);
+  const {amount:denomRevenue} = denomGrandTotals(draft.denom);
+  const html = `
+    <h1>DSS Trip Sheet — ${draft.route}</h1>
+    <h3>Phoenix Bay ⇄ Bambooflat</h3>
+    <div class="p-meta">
+      <span><b>Date:</b> ${draft.date}</span>
+      <span><b>Shift:</b> ${draft.shift} (${draft.staff})</span>
+      <span><b>Vessel:</b> ${draft.vessel}</span>
+    </div>
+    ${tripTableHTML('Trip Sheet — Phoenix Bay ⇄ Bambooflat', mergeTripRows(draft))}
+    <div class="p-sec-title">Total: ${sumCol(combined,'pax')} Pax · ${sumCol(combined,'c2w')} 2W · ${sumCol(combined,'c3w')} 3W · ${sumCol(combined,'c3wl')} 3WL · ${sumCol(combined,'c4w')} 4W · ${sumCol(combined,'c4wl')} 4WL — Revenue ₹${tripRevenue.toLocaleString('en-IN')}</div>
+    ${denomTableHTML(draft.denom)}
+    ${govtTableHTML(draft.govtVehicles)}
+    ${onlineTableHTML(draft.onlineTickets)}
+    <div class="p-recon">Reconciliation: Trip Sheet Revenue ₹${tripRevenue.toLocaleString('en-IN')} vs Denomination Revenue ₹${denomRevenue.toLocaleString('en-IN')} ${tripRevenue===denomRevenue?'(Matched)':'(Difference of ₹'+Math.abs(tripRevenue-denomRevenue).toLocaleString('en-IN')+' — check Online Tickets / Government Vehicles above)'}</div>
+    <div class="p-sign">
+      <span>Signature of Conductor: ______________________</span>
+      <span>Date: ${draft.date}</span>
+    </div>
+    <div class="note" style="text-align:center; margin-top:10px;">Digital Trip Sheet · Credit: Mahesh Surada (DSS Staff)</div>`;
+  doPrint(html);
+  }catch(err){
+    console.error('exportSheetPDF failed', err);
+    alert('Could not generate this sheet\'s PDF. Please try again after saving the sheet.');
+  }
+}
+
+function exportDailyPDF(){
+  try{
+  const date = document.getElementById('drDate').value;
+  if(!date){ alert('Pick a date first.'); return; }
+  const daySheets = sheets.filter(s=>s.date===date);
+  if(daySheets.length===0){ alert('No sheets saved for this date.'); return; }
+  let body = `<h1>DSS Daily Report — Route No. 3</h1><h3>${date}</h3>`;
+  const denomAgg = blankDenom();
+  const govtAgg = [];
+  const onlineAgg = [];
+  let dayRev=0, dayTix=0;
+  daySheets.sort((a,b)=> a.shift==='Morning'?-1:1).forEach(s=>{
+    const combined = [...(s.outward||[]), ...(s.inward||[])];
+    const rev = sheetRevenue(s);
+    const tix = combined.reduce((a,r)=> a+(r.pax||0)+(r.c2w||0)+(r.c3w||0)+(r.c3wl||0)+(r.c4w||0)+(r.c4wl||0),0);
+    dayRev+=rev; dayTix+=tix;
+    RATES.forEach(r=> denomAgg[r].push(...((s.denom&&s.denom[r])||[])));
+    govtAgg.push(...(s.govtVehicles||[]));
+    onlineAgg.push(...(s.onlineTickets||[]));
+    body += `<div class="p-sec-title">${s.shift} Shift — ${s.staff} (${s.vessel})</div>
+      ${tripTableHTML('Trip Sheet', mergeTripRows(s))}
+      <div class="p-recon">Shift Revenue: ₹${rev.toLocaleString('en-IN')} · Tickets: ${tix}</div>`;
+  });
+  body += `<div class="p-sec-title">DAY TOTAL — Revenue ₹${dayRev.toLocaleString('en-IN')} · Tickets ${dayTix}</div>`;
+  body += denomTableHTML(denomAgg);
+  body += govtTableHTML(govtAgg);
+  body += onlineTableHTML(onlineAgg);
+  body += `<div class="note" style="text-align:center; margin-top:10px;">Digital Trip Sheet · Credit: Mahesh Surada (DSS Staff)</div>`;
+  doPrint(body);
+  }catch(err){
+    console.error('exportDailyPDF failed', err);
+    alert('Could not generate the Day PDF — this date may have a sheet with incomplete data.');
+  }
+}
+
+function exportMonthlyPDF(){
+  try{
+    const month = document.getElementById('mrMonth').value;
+    if(!month){ alert('Pick a month first.'); return; }
+    const monthSheets = sheets.filter(s=>s.date.slice(0,7)===month);
+    if(monthSheets.length===0){ alert('No data for this month.'); return; }
+
+    let totalGovt=0;
+    const byType = {pax:0,c2w:0,c3w:0,c3wl:0,c4w:0,c4wl:0,cargo:0};
+    const rateFor = k => k==='cargo' ? FARE.c2w : FARE[k];
+    const byStaff = {};
+    const denomAgg = blankDenom();
+    const govtAgg = [];
+    const onlineAgg = [];
+
+    monthSheets.forEach(s=>{
+      const combined = [...(s.outward||[]), ...(s.inward||[])];
+      const gv = (s.govtVehicles||[]).length;
+      const {count: sheetDenomCount, amount: sheetDenomAmount} = denomGrandTotals(s.denom||{});
+      totalGovt+=gv;
+      combined.forEach(r=> Object.keys(byType).forEach(k=> byType[k]+=(r[k]||0)));
+      byStaff[s.staff] = byStaff[s.staff] || {revenue:0, tickets:0, days:new Set(), shift:s.shift, govt:0};
+      byStaff[s.staff].revenue+=sheetDenomAmount; byStaff[s.staff].tickets+=sheetDenomCount; byStaff[s.staff].govt+=gv;
+      byStaff[s.staff].days.add(s.date);
+      RATES.forEach(r=> denomAgg[r].push(...((s.denom&&s.denom[r])||[])));
+      govtAgg.push(...(s.govtVehicles||[]).map(g=>({...g, date:s.date, shift:s.shift})));
+      onlineAgg.push(...(s.onlineTickets||[]).map(o=>({...o, date:s.date, shift:s.shift})));
+    });
+
+    const monthDenom = denomGrandTotals(denomAgg);
+    const byTypeKeys = Object.keys(byType);
+    const totalRevenue = byTypeKeys.reduce((a,k)=>a+byType[k]*rateFor(k),0);
+    const totalOnline = onlineAgg.reduce((a,o)=>a+(+o.count||1),0);
+
+    const html = `<h1>DSS Monthly Statement — Route No. 3</h1><h3>${monthLabel(month)}</h3>
+      <div class="p-sec-title">Month Total: Revenue ₹${totalRevenue.toLocaleString('en-IN')} · Denomination Tickets Sold ${monthDenom.count} · Government Vehicles ${totalGovt} · Online Tickets ${totalOnline}</div>
+      <div class="p-sec-title">By Ticket Type</div>
+      <table><thead><tr><th>Type</th><th>Rate</th><th>Count</th><th>Amount</th></tr></thead>
+        <tbody>${byTypeKeys.map(k=>{
+          const lbl = {pax:'Pax',c2w:'2W',c3w:'3W',c3wl:'3WL',c4w:'4W',c4wl:'4WL',cargo:'Cargo'}[k];
+          return `<tr><td>${lbl}</td><td>₹${rateFor(k)}</td><td>${byType[k]}</td><td>₹${(byType[k]*rateFor(k)).toLocaleString('en-IN')}</td></tr>`;
+        }).join('')}
+        <tr class="p-total"><td colspan="2">Total</td><td>${byTypeKeys.reduce((a,k)=>a+byType[k],0)}</td><td>₹${totalRevenue.toLocaleString('en-IN')}</td></tr>
+        </tbody>
+      </table>
+      ${denomTableHTML(denomAgg)}
+      <div class="p-sec-title">By Staff / Shift (Revenue &amp; Avg/Day from Denomination Tickets Issued)</div>
+      <table><thead><tr><th>Staff</th><th>Shift</th><th>Denom. Tickets</th><th>Denom. Revenue</th><th>Days</th><th>Avg/Day</th><th>Govt Veh.</th></tr></thead>
+        <tbody>${Object.keys(byStaff).map(name=>{
+          const d = byStaff[name]; const days = d.days.size;
+          return `<tr><td>${name}</td><td>${d.shift}</td><td>${d.tickets}</td><td>₹${d.revenue.toLocaleString('en-IN')}</td><td>${days}</td><td>₹${(d.revenue/days).toFixed(0)}</td><td>${d.govt}</td></tr>`;
+        }).join('')}</tbody>
+      </table>
+      ${monthGovtTableHTML(govtAgg)}
+      ${monthOnlineTableHTML(onlineAgg)}
+      <div class="p-sign"><span>Digital Trip Sheet · Credit: Mahesh Surada (DSS Staff)</span><span></span></div>`;
+    doPrint(html);
+  }catch(err){
+    console.error('exportMonthlyPDF failed', err);
+    alert('Could not generate the Monthly PDF — one of the saved sheets for this month may have incomplete data. Try Export Month CSV instead, or check each daily sheet in that month opens correctly.');
+  }
+}
+
+// ---------- CUSTOM DATE RANGE ----------
+function getRangeSheets(){
+  const from = document.getElementById('rangeFrom').value;
+  const to = document.getElementById('rangeTo').value;
+  if(!from || !to){ alert('Pick both a From and To date.'); return null; }
+  if(from > to){ alert('From date must be before or the same as the To date.'); return null; }
+  const rangeSheets = sheets.filter(s=> s.date >= from && s.date <= to);
+  return {from, to, rangeSheets};
+}
+
+function renderRangeReport(){
+  const r = getRangeSheets();
+  const body = document.getElementById('rangeReportBody');
+  if(!r) return;
+  const {from, to, rangeSheets} = r;
+  if(rangeSheets.length===0){ body.innerHTML = `<div class="note">No saved sheets between ${from} and ${to}.</div>`; return; }
+  let totalRevenue=0, totalGovt=0;
+  const denomAgg = blankDenom();
+  rangeSheets.forEach(s=>{
+    totalRevenue += sheetRevenue(s);
+    totalGovt += (s.govtVehicles||[]).length;
+    RATES.forEach(rate=>{ if(!denomAgg[rate]) denomAgg[rate]=[]; denomAgg[rate].push(...((s.denom&&s.denom[rate])||[])); });
+  });
+  const {count: denomCount, amount: denomRevenue} = denomGrandTotals(denomAgg);
+  body.innerHTML = `
+    <div class="row-flex"><span>Sheets in range</span><b>${rangeSheets.length}</b></div>
+    <div class="row-flex"><span>Denomination tickets sold</span><b>${denomCount}</b></div>
+    <div class="row-flex"><span>Trip sheet revenue</span><b>₹${totalRevenue.toLocaleString('en-IN')}</b></div>
+    <div class="row-flex"><span>Denomination revenue</span><b>₹${denomRevenue.toLocaleString('en-IN')}</b></div>
+    <div class="row-flex"><span>Government vehicles</span><b>${totalGovt}</b></div>`;
+}
+
+function exportRangeCSV(){
+  const r = getRangeSheets();
+  if(!r) return;
+  const {from, to, rangeSheets} = r;
+  if(rangeSheets.length===0){ alert('No data in this range.'); return; }
+  const header = ['Date','Shift','Staff','Vessel','Pax','2W','3W','3WL','4W','4WL','TripRevenue','DenomTickets','DenomRevenue','GovtVehicles'];
+  const rows = rangeSheets.map(s=>{
+    const combined = [...(s.outward||[]), ...(s.inward||[])];
+    const sums = {pax:0,c2w:0,c3w:0,c3wl:0,c4w:0,c4wl:0};
+    combined.forEach(rr=> Object.keys(sums).forEach(k=> sums[k]+=rr[k]));
+    const rev = sheetRevenue(s);
+    const {count,amount} = denomGrandTotals(s.denom);
+    return [s.date,s.shift,s.staff,s.vessel,sums.pax,sums.c2w,sums.c3w,sums.c3wl,sums.c4w,sums.c4wl,rev,count,amount,(s.govtVehicles||[]).length];
+  });
+  const csv = [header, ...rows].map(rr=>rr.join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `DSS-R3-Range-${from}_to_${to}.csv`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportRangePDF(){
+  const r = getRangeSheets();
+  if(!r) return;
+  try{
+  const {from, to, rangeSheets} = r;
+  if(rangeSheets.length===0){ alert('No data in this range.'); return; }
+  let totalRevenue=0, totalGovt=0;
+  const denomAgg = blankDenom();
+  const rows = rangeSheets.slice()
+    .sort((a,b)=> a.date===b.date ? (a.shift==='Morning'?-1:1) : a.date.localeCompare(b.date))
+    .map(s=>{
+      const combined = [...(s.outward||[]), ...(s.inward||[])];
+      const tix = combined.reduce((a2,rr)=> a2+(rr.pax||0)+(rr.c2w||0)+(rr.c3w||0)+(rr.c3wl||0)+(rr.c4w||0)+(rr.c4wl||0),0);
+      const rev = sheetRevenue(s);
+      totalRevenue += rev; totalGovt += (s.govtVehicles||[]).length;
+      RATES.forEach(rate=>{ if(!denomAgg[rate]) denomAgg[rate]=[]; denomAgg[rate].push(...((s.denom&&s.denom[rate])||[])); });
+      return `<tr><td>${s.date}</td><td>${s.shift}</td><td>${s.staff}</td><td>${s.vessel}</td><td>${tix}</td><td>₹${rev.toLocaleString('en-IN')}</td></tr>`;
+    }).join('');
+  const rangeDenom = denomGrandTotals(denomAgg);
+  const html = `<h1>DSS Range Statement — Route No. 3</h1><h3>${from} to ${to}</h3>
+    <div class="p-sec-title">Range Total: Revenue ₹${totalRevenue.toLocaleString('en-IN')} · Denomination Tickets Sold ${rangeDenom.count} · Government Vehicles ${totalGovt}</div>
+    <table><thead><tr><th>Date</th><th>Shift</th><th>Staff</th><th>Vessel</th><th>Tickets</th><th>Revenue</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    ${denomTableHTML(denomAgg)}`;
+  doPrint(html);
+  }catch(err){
+    console.error('exportRangePDF failed', err);
+    alert('Could not generate the Range PDF — a sheet in this range may have incomplete data.');
+  }
+}
+
+function monthLabel(m){
+  const [y,mo] = m.split('-');
+  const names = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return `${names[+mo-1]} ${y}`;
+}
+
+// ---------- INIT ----------
+(async function init(){
+  await loadAll();
+  const today = todayStr();
+  document.getElementById('hDate').value = today;
+  document.getElementById('drDate').value = today;
+  document.getElementById('mrMonth').value = today.slice(0,7);
+  loadFormFor(today, 'Morning');
+
+  // Offline support: only works when this file is served over http(s) alongside
+  // sw.js/manifest.json/icons (not when opened directly as a local file, and not
+  // needed inside Claude's own artifact preview).
+  if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+    navigator.serviceWorker.register('sw.js').catch(()=>{ /* offline support unavailable here — app still works online */ });
+  }
+})();
+</script>
+
+
+</body>
+</html>
